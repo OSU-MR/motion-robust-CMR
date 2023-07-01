@@ -1,9 +1,19 @@
 function [u,hist] = cs(x0,y,A,p)
-% Compressed Sensing 'CS' (ADMM/Split Bregman Implementation)
+%===========================================================================================%
+% Inputs:
+% x0: Initial Image
+% y: Measured undersampled k-space data
+% A: Sensing matrix
+% p: parameters
+% Outputs:
+% u: reconstructed image
+% hist: history of objective function
+%===========================================================================================%
+% Compressive Recovery with Outlier Rejection 'CORe' (ADMM/Split Bregman Implementation)
 % Written by:
 % Syed Murtaza Arshad (arshad.32@osu.edu)
 % Rizwan Ahmad, PhD (ahmad.46@osu.edu)
-
+%===========================================================================================%
 
 % Extract parameters from p structure
 mu    = p.mu_l2l1;

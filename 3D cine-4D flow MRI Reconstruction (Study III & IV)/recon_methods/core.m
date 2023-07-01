@@ -1,9 +1,19 @@
 function [u,hist] = core(x0,y,A,p)
-% Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2023) 
+%===========================================================================================%
+% Inputs:
+% x0: Initial Image
+% y: Measured undersampled k-space data
+% A: Sensing matrix
+% p: parameters
+% Outputs:
+% u: reconstructed image
+% hist: history of objective function
+%===========================================================================================%
+% Compressed Sensing 'CS' (ADMM/Split Bregman Implementation)
 % Written by:
 % Syed Murtaza Arshad (arshad.32@osu.edu)
 % Rizwan Ahmad, PhD (ahmad.46@osu.edu)
-
+%===========================================================================================%
 % Extract parameters from p structure
 mu1  = p.mu1_l2l1g;
 mu2  = p.mu2_l2l1g;

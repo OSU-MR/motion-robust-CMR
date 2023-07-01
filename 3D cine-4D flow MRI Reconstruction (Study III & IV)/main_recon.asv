@@ -33,9 +33,8 @@ opt.flow=flow;
 
 
 %*************************************************
-% add folder path to save results
-% paths are formatted for linux, you can change for windows accordingly
-sfolder = ['/home/',saveName,'_',datestr8601,'/'];               
+% folder path to save results
+sfolder = ['/home/murtaza/MRI Data/Data/Recon Data/',saveName,'_',datestr8601,'/'];               
 
 %*************************************************
 %===================================================================================================
@@ -82,7 +81,7 @@ opt.mu_cs =   5e-1; %langrange multiplier
 if(flow) % For 4D Flow
     % 16 regularization params for 16 wavelet bands (CORe)
     opt.lam1_core = 4.25e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5]; % 
-    opt.lam2_core = 1.5e-1; %lagrange multiplier
+    opt.lam2_core = 1e-1; %lagrange multiplier
 else % For 3D Cine
    opt.lam1_core = 6.4e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5]; % 
    opt.lam2_core = 7.5e-2; %lagrange multiplier

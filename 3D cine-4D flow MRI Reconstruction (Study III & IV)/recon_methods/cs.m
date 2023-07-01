@@ -64,12 +64,11 @@ for i = 1:oIter
         % Storing 16-band wavelet transform to Wdecu 
     Wdecu = W.dec(reshape(u,[A.frame_size(1),A.frame_size(2), ...
         A.frame_size(3),A.Q]),1);
-        % Applying soft-thresholding to solve L1-norm based subproblem
+    % Updating auxiliary variables
     for ind = 1:16
         d(:,:,:,:,ind) = shrink1(Wdecu(:,:,:,:,ind)+b(:,:,:,:,ind), ...
             lam(ind)/mu, 1, 1e-6);
     end
-    % Updating auxiliary variables
     b = b + (Wdecu - d);
 
     u=u(:);

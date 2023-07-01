@@ -84,12 +84,11 @@ for i = 1:oIter
     Wdecu = W.dec(reshape(u,[A.frame_size(1),A.frame_size(2), ...
         A.frame_size(3),A.Q]),1);
 
-    % Applying soft-thresholding to solve L1-norm based subproblem
+    % Updating auxiliary variables
     for ind = 1:16
         d1(:,:,:,:,ind) = shrink1(Wdecu(:,:,:,:,ind)+b1(:,:,:,:,ind), ...
             lam1(ind)/mu1, 1, 1e-6);
     end
-    % Updating auxiliary variables
     b1 = b1 + (Wdecu - d1);
     % Reshaping v to enforce group (readout) sparsity
     v=reshape(v,readout,[]);

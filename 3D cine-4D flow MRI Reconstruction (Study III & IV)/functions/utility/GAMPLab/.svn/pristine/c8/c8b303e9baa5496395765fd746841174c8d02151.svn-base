@@ -1,0 +1,107 @@
+classdef ncCAwgnEstimOut < EstimOut
+    % ncCAwgnEstimOut:  noncoherent CAWGN scalar output estimation function
+    %
+    % Corresponds to an output channel of the form
+    %   mean0 = exp(j*theta)*(z + CN(0,var0)) for theta = U[0,2pi)
+    
+    properties
+        % Prior mean and variance
+        mean0;  % Mean
+        var0;   % Variance
+        
+        % True indicates to compute output for max-sum
+        maxSumVal = false;
+    end
+    
+    methods
+        % Constructor
+        function obj = ncCAwgnEstimOut(mean0, var0, maxSumVal)
+            obj = obj@EstimOut;
+            obj.mean0 = mean0;
+	    if (nargin < 2)
+                obj.var0 = 0.01*abs(mean0).^2;
+	    else
+                obj.var0 = var0;
+	    end
+            if (nargin >= 3)
+                obj.maxSumVal = maxSumVal;
+            end
+            
+            %Warn user if they set zero variance
+            if any(obj.var0 == 0)
+                warning(['Tiny non-zero variances will be used for'...
+                    ' computing log likelihoods. May cause problems'...
+                    ' with adaptive step size if used.']) %#ok<*WNTAG>
+            end
+
+%           if obj.maxSumVal = true
+%               error(['ncCAwgnEstimOut.m not yet implemented for maxSumVal=true'])
+%           end;
+        end
+        
+        % ncCAWGN estimation function
+        % Provides the mean and variance of a variable u
+        % from an observation v*exp(j*theta) = u + w where
+	% u = CN(umean0,uvar0), w = CN(0,wvar), theta = U[0,2pi)
+	% 
+	% Usually we think of v=phat, wvar=pvar, umean0=y, uvar0=noisevar
+        function [umean, uvar] = estim(obj, v, wvar)
+            % Get prior
+            umean0_abs = abs(obj.mean0);
+            uvar0 = obj.var0;
+	    v_abs = abs(v);
+           
+	    if (obj.maxSumVal)
+	        % Compute posterior mode and sensitivity of u 
+		umean = sign(v).*(umean0_abs+v_abs.*uvar0./wvar)./(1+uvar0./wvar);
+                uvar = (0.5*umean0_abs./v_abs+uvar0)./(1+uvar0./wvar); 
+	    else
+                % Compute posterior mean and variance of u
+                B = 2*umean0_abs.*v_abs./(uvar0+wvar);
+                I1overI0 = min( B./(sqrt(B.^2+4)), ...
+                    B./(0.5+sqrt(B.^2+0.25)) );%upper bounds (11)&(16) from Amos
+                umean0_sca = umean0_abs./(1+uvar0./wvar);
+                v_sca = v_abs./(wvar./uvar0+1);
+                umean = (v_sca + umean0_sca.*I1overI0).*sign(v);
+                uvar = umean0_sca.^2 + v_sca.^2 ...
+                    + (1+B.*I1overI0)./(1./uvar0+1./wvar) ...
+                    - abs(umean).^2;
+	    end
+        end
+        
+        % Compute log likelihood
+        %   E( log p_{Y|Z}(y|z) )
+        function ll = logLike(obj,zhat,zvar)
+           
+            %Use noise variance, or tiny value if variance is zero
+            val = obj.var0;			% noise var
+            val(val == 0) = 1e-8;
+         
+	  
+            mean0_abs = abs(obj.mean0);		% |y|
+	    zhat_abs = abs(zhat);		% |zhat|
+            B = 2*mean0_abs.*zhat_abs./val;
+	    if (obj.maxSumVal)
+	        ll = ...
+		    - ((mean0_abs-zhat_abs).^2 )./val ...
+		    + log(besseli(0,B,1));
+	    else
+	        %Compute upper bound on (offset) log likelihood
+	        %ll = - log(pi*val) ...
+	        ll = ...
+		    - ((mean0_abs-zhat_abs).^2 + zvar)./val ...
+		    + log(besseli(0,B,1));
+
+                % ...relative to above...
+                % umean0 -> obj.mean0 
+                % uvar0+wvar -> obj.var0 = val
+                % v -> zhat
+
+                %old:       ll = -(abs(obj.mean0-zhat).^2 + zvar)./val;
+	    end
+        end
+        
+    end
+    
+end
+

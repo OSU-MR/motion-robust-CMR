@@ -1,0 +1,46 @@
+classdef DiracEstimIn < EstimIn
+    % DiracEstimOut:  Dirac-delta scalar output estimation function
+    %
+    % Corresponds to an output channel of the form
+    %   y = scale*z 
+    
+    properties
+        % Prior mean
+        x0;      % Measured output
+    end
+    
+    methods
+        % Constructor
+        function obj = DiracEstimIn(x0)
+            obj.x0 = x0;
+        end
+        
+        % Prior mean and variance
+        function [mean0, var0, valInit] = estimInit(obj)
+            mean0 = obj.x0;
+            var0  = zeros(size(obj.x0));
+            valInit = 0;
+        end
+        
+        % DiracEstimIn estimation function
+        % Forces the posterior estimates to be the prior mean with variance
+        % 0
+        function [xmean, xvar, val] = estim(obj, rhat, rvar)
+            % Compute posterior mean and variance
+            xmean = obj.x0;
+            xvar = zeros(size(rvar));
+            
+            if (nargout >= 3)  
+                val = zeros(size(rhat));
+            end
+        end
+        
+        
+        % Generate random samples from p(y|z)
+        function x = genRand(obj, z)
+            x = obj.x0;
+        end
+    end
+    
+end
+

@@ -1,0 +1,64 @@
+classdef DiracEstimOut < EstimOut
+    % DiracEstimOut:  Dirac-delta scalar output estimation function
+    %
+    % Corresponds to an output channel of the form
+    %   y = scale*z 
+    
+    properties
+        % Prior mean and variance
+        y;      % Measured output
+        scale = 1;  % scale factor
+        
+        % True indicates to compute output for max-sum
+        maxSumVal = false;
+    end
+    
+    methods
+        % Constructor
+        function obj = DiracEstimOut(y, maxSumVal, scale)
+            obj = obj@EstimOut;
+            if nargin ~= 0 % Allow nargin == 0 syntax
+                obj.y = y;
+                if (nargin >= 2)
+                    if (~isempty(maxSumVal))
+                        obj.maxSumVal = maxSumVal;
+                    end
+                end
+                if (nargin >= 3)
+                    obj.scale = scale;
+                end
+            end
+        end
+        
+        % Size
+        function [nz,ncol] = size(obj)
+            [nz,ncol] = size(obj.y);
+        end
+        
+        % AWGN estimation function
+        % Provides the posterior mean and variance of variable z
+        % from an observation y = scale*z, z = CN(zmean0,zvar0) 
+        function [zmean, zvar] = estim(obj, zmean0, zvar0)
+            % Compute posterior mean and variance
+            zmean = obj.y/obj.scale;
+            zvar = zeros(size(zvar0));
+        end
+        
+        % Return zero for Log likelihood 
+        function ll = logLike(obj,zhat,zvar)
+            ll = zeros(size(obj.y));
+        end
+        
+        %Return number of columns of y
+        function S = numColumns(obj)
+	    S = size(obj.y,2);
+        end
+        
+        % Generate random samples from p(y|z)
+        function y = genRand(obj, z)
+            y = obj.scale.*z;
+        end
+    end
+    
+end
+

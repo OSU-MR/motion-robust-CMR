@@ -1,0 +1,54 @@
+classdef NullEstimIn < EstimIn
+    % NullEstimIn:  Max-sum estimation with no prior
+    
+    properties
+        % Prior mean and variance.  Only used initially
+        mean0;  % Mean
+        var0;   % Variance
+        
+    end
+    
+    methods
+        % Constructor
+        function obj = NullEstimIn(mean0, var0)
+            obj = obj@EstimIn;
+            if nargin ~= 0 % Allow nargin == 0 syntax
+                obj.mean0 = mean0;
+                obj.var0 = var0;
+            end
+        end
+        
+        % Prior mean and variance
+        function [mean0, var0, valInit] = estimInit(obj)
+            mean0 = obj.mean0;
+            var0  = obj.var0;
+            valInit = 0;
+        end
+        
+        % Circular AWGN estimation function
+        % Provides the mean and variance of a variable u
+        % from an observation v = u + w, w = CN(0,wvar)
+        %
+        function [xhat, xvar, val] = estim(obj, rhat, rvar)
+            xhat = rhat;
+            xvar = rvar;
+            val = 0;
+        end
+        
+        % Computes the likelihood p(y) for y = x + v, v = CN(0,yvar)
+        function py = plikey(obj,y,yvar)
+            ny = length(y);
+            py = zeros(ny,1);
+        end
+        
+        % Computes the log-likelihood, log p(y), for y = x + v, where 
+        % x = CN(obj.mean0, obj.var0) and v = CN(0, yvar)
+        function logpy = loglikey(obj, y, yvar)
+            ny = length(y);
+            logpy = zeros(ny,1);
+        end
+        
+    end
+    
+end
+

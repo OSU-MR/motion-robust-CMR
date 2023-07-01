@@ -1,0 +1,138 @@
+classdef SNIPEstim < EstimIn
+    % SNIPE:  Sparsifying Non-Informative Parameter Estimator
+    %
+    % Author Mark Borgerding (borgerding.7 osu edu)
+    %
+    % Parameter:
+    % omega: real number: typically in range -4 to 10
+    % larger omega implies less linear mapping from rhat to xhat.  
+    %
+    % SNIPE is an abstraction of a Bernoulli-Uniform(-u,u) MMSE estimator 
+    % under Gaussian noise observation.  
+    %
+    % Consider a random variable X under the prior
+    %   p_x(x)  = (1-lam) * delta(x) + U(-u,u)
+    %  observed through AWGN, R = X + N(0,rvar)
+    %  and further assume that the range [-u:u] is sufficiently large that
+    % integral over [-u:u] of N(x;R,rvar) =~ 1
+    %  
+    % Deriving the MMSE estimator from the above assumptions yields an MMSE estimator 
+    % where all the parameters coalesce nicely into a single parameter.
+    %
+    % xhat = rhat / (1 + exp(-rhat^2/(2*rvar) + omega) );
+    %
+    % as rhat^2/rvar -> 0       ; xhat -> 1/(1+exp(omega))
+    % as rhat^2/rvar -> large   ; xhat -> rhat
+
+    % Interpretations of Omega Parameter:
+    %
+    % *) "twist toward flatness" of the shrinkage function as r^2/rvar approaches zero. 
+    % *) Neural network activation function bias.
+    %
+    % Reference:
+    % Generalized Approximate Message Passing for the Cosparse Analysis Model
+    % Mark Borgerding,Phil Schniter http://arxiv.org/abs/1312.3968
+    properties 
+        omega=[];
+        xhat0=0;
+        xvar0=1; % only used when SNIPE is used as an EstimIn, as a return value from estimInit
+    end
+
+    methods
+        % Constructor
+        function obj = SNIPEstim(omega,varargin)
+            obj = obj@EstimIn;
+            if nargin>0 , obj.omega = omega; end
+            for i = 1:2:length(varargin)
+                obj.(varargin{i}) = varargin{i+1};
+            end
+        end
+
+        function [xhat, xvar,val] = estim(obj, rhat, rvar)
+            rho = 1 ./ (1  +  exp(-.5*abs(rhat).^2 ./ rvar + obj.omega ) );
+            xhat = rho .* rhat;  
+            % xvar := rvar times the xhat derivative w.r.t. rhat
+            xvar = rho .* ( abs(rhat).^2 .* (1-rho) + rvar);
+            val=0;
+        end
+
+        function todo = logLike(obj,xhat,xvar)
+            todo =0;% zeros(size(xhat)); 
+        end
+
+        function [xhat0,xvar0] = estimInit(obj)
+            xhat0 = obj.xhat0;
+            xvar0 = obj.xvar0;
+        end
+
+        function [dgdo,d2go2] = sdDeriv(obj,rhat,rvar,omega)
+            % Squared Distance Derivative
+            % let f(rhat,rvar,omega) := norm(rhat - xhat)^2
+            % where xhat(rhat,rvar,omega) := SNIPEstim(omega).estim(rhat,rvar)
+            % then this function returns the first and second partial derivative of
+            % f(.) w.r.t the tuning parameter omega
+            if nargin<4
+                omega = obj.omega;
+            end
+            h = exp(.5*abs(rhat).^2./rvar - omega);
+            dgdo  = 2*sum( abs(rhat).^2 .* h ./ (1+h).^3);
+            d2go2 = 2*sum( abs(rhat).^2 .* h .* (2*h-1) ./ (1+h).^4);
+        end
+
+    end
+    methods (Static)
+        function om = omegaSolve(rhat,rvar,targetSD)
+            % returns the omega value such that
+            % norm(rhat - SNIPEstim(omega).estim(rhat,rvar) )^2 = targetSD
+            % In other words, 
+            % minimize g(omega) = ( f(omega) - targetSD)^2 /2
+            % where f(omega) = norm(rhat - xhat_omega)^2
+            om = 0;
+            rh2 = abs(rhat).^2;
+            erh2v = exp( abs(rhat).^2/2./rvar );
+
+            g = @(om) (sum( rh2./ (1 +  exp(-om)*erh2v).^2 ) - targetSD)^2/2;
+
+            %fprintf('rvar=%g targetSD=%g (perco=%g) frac=%g',mean(rvar),targetSD,targetSD/length(rhat),targetSD/norm(rhat)^2 )
+            scaleMax=1; sigma = .1;beta = .1; % Armijo stepsize parameters
+            gcur = g(om);
+            for k=1:50
+                h = exp(-om)*erh2v;
+                scale2 = (1 + h).^-2;
+                scale2(isinf(h))=0;
+                scale3 = (1 + h).^-3;
+                scale3(isinf(h))=0;
+                y = sum( rh2.*scale2 ) - targetSD; % want this to equal 0
+                perCoefD1 = 2*rh2 .* h .*scale3;
+                perCoefD1(~isfinite(perCoefD1))=0;
+                d1  =  y*sum(perCoefD1);
+                d =  -d1; % steepest descent
+                
+                if abs(d) < 1e-7 
+                    break
+                end
+
+                if isnan(d)
+                    d
+                end
+                % Armijo stepsize rule, with growable max stepsize scaleMax
+                m=0;
+                while true
+                    alphak = beta.^m*scaleMax;
+                    g_alphak =  g(om+alphak*d);
+                    if gcur - g_alphak >= -sigma*alphak*d1*d
+                        break;
+                    end
+                    m = m + 1;
+                    if m>20
+                        break;
+                    end
+                end
+                gcur = g_alphak;
+                scaleMax = alphak/beta; % allow stepsize to grow to find those hard-to-reach places
+                om = om + alphak*d;
+                %fprintf('%d: om=%.3f alphak=%g d=%g sqerr=%g m=%d\n',k,om, alphak,d,g_alphak,m);
+            end
+        end
+    end
+end

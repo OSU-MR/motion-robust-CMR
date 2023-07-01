@@ -1,0 +1,59 @@
+function [ xhatGAMP ] = GAMP4DpMRI(data, samp, GAMPopt, lambda)
+%GAMP4DPMRI Reconstructs 4D pMRI data using GAMP and 4D wavelets
+%   
+
+% fftshifts
+data = fftshift(fftshift(fftshift(data,1),2),3);
+samp = fftshift(fftshift(fftshift(samp,1),2),3);
+
+% Coil combine
+data = coilCombine(data,12,'3dt');
+
+% Create time averaged image
+avg_image = sum(data,5);
+avg_pattern = sum(samp,4);
+avg_pattern(avg_pattern==0) = inf;
+avg_image = bsxfun(@rdivide,avg_image,avg_pattern);
+avg_image = ifft(ifft(ifft(avg_image,[],1),[],2),[],3);
+sos = sqrt(sum(abs(avg_image).^2,4));
+maps = repmat(sos,[1,1,1,size(data,4)]);
+sos = repmat(sos,[1,1,1,size(samp,4)]);
+GAMPopt.xhat0 = sos(:);
+
+%% Estimate sensitivity maps
+% maps = avg_image./maps;
+% maps = repmat(maps,[1,1,1,1,size(data,5)]);
+
+p.mthd   = 3; % '1' for espirit, '2' time-average spirit, '3' for walsh
+p.reEst  = 0; % Res-estimating sensitivities
+p.fil = 3;
+[maps,] = WalshCoilCombine3D(avg_image,p);
+
+% Downsample the data
+data = downsample_data(data,samp);
+
+% Create Opterators
+pMRIOp = pMRI_Op_3D_t(maps,samp,1);
+EstimIn = NullEstimIn(0,1);
+op = ReVEAL();
+op.options.SparseTrans.wname = {'db1','db1','db1','db1'};
+W = ndDWTLinTrans4D(op.options.SparseTrans,size(samp),1);
+
+% Concatonate All The Linear Transform Operator Together
+Op = LinTransConcat({pMRIOp;W});
+
+% Input and outputs esimators
+MeasEstimOut = CAwgnEstimOut(data(:),0.01,1);
+lambda = setLambda(size(samp),lambda);
+AnaEstimOut1 = CplxLaplaceEstimOut(lambda);
+EstimOut = EstimOutConcat({MeasEstimOut;AnaEstimOut1},[pMRIOp.M,W.M]);
+
+% Reconstruct
+tic;
+xhatGAMP = gampEst(EstimIn,EstimOut,Op,GAMPopt);
+display(sprintf('Reconstruction Completed in %s',num2str(toc)))
+xhatGAMP = reshape(xhatGAMP,size(samp));
+xhatGAMP = fftshift(fftshift(fftshift(xhatGAMP,1),2),3);
+
+end
+

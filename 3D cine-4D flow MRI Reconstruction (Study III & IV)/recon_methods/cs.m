@@ -9,7 +9,7 @@ function [u,hist] = cs(x0,y,A,p)
 % u: reconstructed image
 % hist: history of objective function
 %===========================================================================================%
-% Compressive Recovery with Outlier Rejection 'CORe' (ADMM/Split Bregman Implementation)
+% Compressed Sensing 'CS' (ADMM/Split Bregman Implementation)
 % Written by:
 % Syed Murtaza Arshad (arshad.32@osu.edu)
 % Rizwan Ahmad, PhD (ahmad.46@osu.edu)

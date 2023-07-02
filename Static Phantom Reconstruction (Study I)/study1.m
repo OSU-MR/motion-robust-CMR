@@ -1,4 +1,19 @@
-
+%=========================================================================%
+% Main Script for Static phantom study (Study I) using 
+% 1. Compressed Sensing 'CS' (ADMM Implementation)
+% 2. Robust Regression 'RR' (Nikolova (2004).
+% https://doi.org/10.1023/B:JMIV.0000011326.88682.e5)
+% 3. Sparse Outliers 'SO' (Dong (2012) .
+% https://www.researchgate.net/publication/256475955_Wavelet_Frame_Based_Blind_Image_Inpainting
+% 4.Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2023) 
+% All algorithms are based on ADMM/Split Bregman implementation
+% ========================================================================%
+% OSU CMR Lab
+% The Ohio State University
+% Written by:
+% Syed Murtaza Arshad (arshad.32@osu.edu)
+% Rizwan Ahmad, PhD (ahmad.46@osu.edu)
+%=========================================================================% 
 clear;
 clc;
 close all;

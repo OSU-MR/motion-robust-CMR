@@ -11,6 +11,7 @@ function [x,yo] = core(y,p)
 % p: parameters
 % Output:
 % x: reconstructed image
+% yo: rejected outliers
 %===========================================================================================%
 % Extract parameters from p structure
     mu1   = p.mu1_core;
@@ -39,7 +40,7 @@ function [x,yo] = core(y,p)
     v2 = ymax/1e3*randn(1,N(2)).*s;
     u2 = ymax/1e3*randn(size(v2)).*s;
     %Walk through iterations    
-    tStart = tic;  % Start iter timer
+    tStart = tic;  % Start recon timer
     for i = 1:oIter 
         iStart = tic;  % Start iter timer
         for j = 1:iIter

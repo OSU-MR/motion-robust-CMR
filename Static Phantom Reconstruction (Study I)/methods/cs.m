@@ -31,7 +31,7 @@ function x = cs(y,p)
     d = zeros(M); 
     b = zeros(size(d));
     %Walk through iterations
-    tStart = tic; % Start iter timer
+    tStart = tic; % Start recon timer
     for i = 1:oIter
          iStart = tic; % Start iter timer
         for j = 1:iIter

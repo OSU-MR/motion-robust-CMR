@@ -33,7 +33,7 @@ function x = rr(y,p)
     b1 = zeros(size(d1));
     b2 = zeros(size(d2));
     %Walk through iterations    
-    tStart = tic;  % Start iter timer
+    tStart = tic;  % Start recon timer
     for i = 1:oIter
         iStart = tic;  % Start iter timer
         for j = 1:iIter

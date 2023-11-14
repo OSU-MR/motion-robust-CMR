@@ -58,7 +58,7 @@ for i = 1:oIter
     %Counter
     for j = 1:iIter
         % Gradient of fidelity term in objective function wrt u
-        gradA = A.multTr(A.mult(u) + v - y);
+        gradA = 2.*A.multTr(A.mult(u) + v - y);
         % Gradient of wavelet sparisty term in objective function
         gradW = mu1 * W.rec(W.dec(reshape(u,[A.frame_size(1), ...
             A.frame_size(2),A.frame_size(3),A.Q]),1) - d1 + b1);

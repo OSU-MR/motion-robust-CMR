@@ -52,7 +52,7 @@ for i = 1:oIter
     tStart = tic;   % Start the iteration timer 
     for j = 1:iIter
         % Gradient of fidelity term in objective function
-        gradA =  A.multTr(A.mult(u) - y);
+        gradA =  2.*A.multTr(A.mult(u) - y);
         % Gradient of wavelet sparisty term in objective function
         gradW = mu * W.rec(W.dec(reshape(u,[A.frame_size(1), ...
             A.frame_size(2),A.frame_size(3),A.Q]),1) - d + b);
@@ -75,7 +75,7 @@ for i = 1:oIter
 
     % Displaying iteration information
     if rem(i, vrb)==0
-         objA = round(0.5*sum(abs(A.mult(u) - y).^2));
+         objA = round(sum(abs(A.mult(u) - y).^2));
          objW= lam.*reshape(Wdecu,[],16);
          objW =round(sum(abs(objW(:))));
          obj=objA+objW;

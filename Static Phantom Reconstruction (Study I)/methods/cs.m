@@ -35,7 +35,7 @@ function x = cs(y,p)
     for i = 1:oIter
          iStart = tic; % Start iter timer
         for j = 1:iIter
-            gradA =  At(A(x) - y); % Gradient of fidelity term in objective function
+            gradA =  2.*At(A(x) - y); % Gradient of fidelity term in objective function
             gradW = mu * W.rec(W.dec(x,1) - d + b); % Gradient of wavelet sparisty term in objective function
             x = x - gStp*(gradA + gradW);  % Taking gradient descent step to estimate true image
         end
@@ -43,8 +43,8 @@ function x = cs(y,p)
         b = b + (W.dec(x,1) - d); % Updating auxiliary variables
         % Displaying iteration information
         if rem(i, vrb)==0
-            objA = sum(sum(abs(A(x)-y).^2));
-            objW = sum(sum(sum(abs(W.dec(x,1) .* permute(lam,[3,1,2])))));
+            objA = sum(abs(A(x)-y).^2,'all');
+            objW = sum(abs(W.dec(x,1) .*permute(lam,[3,1,2])),'all');
             fprintf('Iter = %s \tobjTOT= %s \tobjA= %s \tobjW= %s\ttime/iter = %s\n',...
                     num2str(i), num2str(objA+objW,5), num2str(objA,5), num2str(objW,5),num2str(toc(iStart),2));
         end

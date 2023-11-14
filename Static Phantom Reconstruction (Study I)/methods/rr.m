@@ -47,8 +47,8 @@ function x = rr(y,p)
         b2 = b2 + (W.dec(x,1) - d2); % Updating auxiliary variables
         % Displaying iteration information
         if rem(i, vrb)==0
-            objA = sum(sum(abs(A(x)-y)));
-            objW = sum(sum(sum(abs(W.dec(x,1) .* permute(lam,[3,1,2])))));
+            objA = sum(abs(A(x)-y),'all');
+            objW = sum(abs(W.dec(x,1) .* permute(lam,[3,1,2])),'all');
             fprintf('Iter = %s \tobjTOT= %s \tobjA= %s \tobjW= %s\ttime/iter = %s\n',...
                     num2str(i), num2str(objA+objW,5), num2str(objA,5), num2str(objW,5),num2str(toc(iStart),2));
         end

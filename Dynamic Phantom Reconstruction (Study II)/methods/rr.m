@@ -51,10 +51,10 @@ for i = 1:oIter
     b2 = b2 + (W.dec(u,1) - d2);
     % Displaying iteration information
     if rem(i, vrb)==0
-        objA = sum(abs(A(u)-y));
-        objW = sum(sum(sum(abs(W.dec(u,1) .* permute(lam,[3,1,2])))));
-        fprintf('Iter = %s \tobjW= %s\tobjA= %s\ttime/iter = %s\n',...
-                num2str(i), num2str(objW),num2str(objA),num2str(toc(iStart)));
+        objA = sum(abs(A(u)-y),'all');
+        objW = sum(abs(W.dec(u,1) .*permute(lam,[3,1,2])),'all');
+        fprintf('Iter = %s \tobjTOT= %s \tobjA= %s \tobjW= %s\ttime/iter = %s\n',...
+        num2str(i), num2str(objA+objW,5), num2str(objA,5), num2str(objW,5),num2str(toc(iStart),2));
     end
        
 end

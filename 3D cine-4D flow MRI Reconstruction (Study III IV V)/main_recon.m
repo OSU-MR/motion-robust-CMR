@@ -1,15 +1,47 @@
-%=========================================================================%
-% Main Script for 3D Cine & 4D Flow Reconstruction using 
-% 1.Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2023) 
-% 2.Compressed Sensing 'CS' (ADMM Implementation)
-% Both algorithms are based on ADMM/Split Bregman implementation
+%{
+Reference: 
+The algorithms implemented below corresponds to research
+currently submitted for MRM Journal publication and available as a 
+preprint on arXiv.
+
+Preprint Details:
+Title: "Motion-robust free-running cardiovascular MRI"
+arXiv: " arXiv:2308.02088v2 [eess.IV]" (Link: https:arxiv.org/abs/2308.02088v2)
+
+The preprint on arXiv provides an accessible overview of the research 
+and may be cited for more detailed information pertaining to the 
+algorithmic approach used herein.
+
+How to cite:
+Arshad SM, Potter LC, Chen C, Liu Y, Chandrasekaran P, Crabtree C, Han Y,
+Ahmad R (2023). Motion-robust free-running cardiovascular MRI. 
+arXiv preprint arXiv:2308.02088. 
+
 % ========================================================================%
-% OSU CMR Lab
-% The Ohio State University
-% Written by:
-% Syed Murtaza Arshad (arshad.32@osu.edu)
-% Rizwan Ahmad, PhD (ahmad.46@osu.edu)
-%=========================================================================% 
+CMR LAB (https://u.osu.edu/ahmad/)
+CMR LAB Github: https://github.com/orgs/OSU-MR
+
+The Ohio State University
+Written by:
+Syed Murtaza Arshad (arshad.32@osu.edu)
+(https://github.com/syedmurtazaarshad)
+
+Rizwan Ahmad, PhD (ahmad.46@osu.edu)
+%}
+
+%%
+%=========================================================================%
+%{
+About the code: 
+Main Script for 3D Cine & 4D Flow Reconstruction using 
+1.Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2023) 
+2. Compressed Sensing 'CS' (Lustig et al. 2008)
+ Both algorithms are based on ADMM/Split Bregman implementation
+%=========================================================================%
+%}
+
+%% Workspace Initialization
+
 clear; 
 close all
 %Adding paths for relevant functions and recon methods
@@ -58,7 +90,6 @@ formatSpec = '%.3g';
 opt.coil = 12;          % Number of reduced coils
 opt.use_gpu = 1;        % gpu (1) or cpu (0)
 opt.nit = 50;           % number of outer iterations
-opt.wvar = 1e-10;       % noise variance (not used)
 opt.spar = 'jtv';
 opt.transform = 'harr'; %harr for harrwavelet transform and tv for tv transform (NN)
 opt.sfolder=sfolder;
@@ -71,23 +102,23 @@ opt.vrb   = 5;      %p rint iterations details after every 'vrb' iterations
 % Parameters for CS
 % 16 regularization params for 16 wavelet bands (CS)
 if(flow) % For 4D Flow
-    opt.lam_cs = 7e-4*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
+    opt.lam_cs = 14e-4*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
 else % For 3D Cine
-    opt.lam_cs = 1e-3*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
+    opt.lam_cs = 2e-3*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
 end
-opt.mu_cs =   5e-1; %langrange multiplier
+opt.mu_cs =   10e-1; %langrange multiplier
 
 
 % Parameters for CORe
 if(flow) % For 4D Flow
     % 16 regularization params for 16 wavelet bands (CORe)
-    opt.lam1_core = 4.25e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5]; % 
+    opt.lam1_core = 8.5e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5]; % 
     opt.lam2_core = 1.5e-1; %lagrange multiplier
 else % For 3D Cine
    opt.lam1_core = 6.4e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5]; % 
    opt.lam2_core = 7.5e-2; %lagrange multiplier
 end
-opt.mu1_core =   5e-1; %lagrange multiplier
+opt.mu1_core =   10e-1; %lagrange multiplier
 opt.mu2_core =   5e-1; %lagrange multiplier
 
 
@@ -163,11 +194,14 @@ p.fil = 3; % filter size
 % compute acceleration rate including partial fourier
 acceleration_rate = numel(weights) / sum(weights(:).^2);
 disp(['Acceleration rate: ', num2str(acceleration_rate)]);
-
+%{ 
+Note: provided sample k-space data has already been normalized by std. dev. 
+of measurement noise during pre-processing of data, i.e. sig^2=1
+%}
 % data scaling
 scale = 0.1 * max(abs(kdata(:)));
 
-opt_scale = opt; opt_scale.wvar = opt_scale.wvar/scale^2;
+opt_scale = opt; 
 
 for f=1:numel(recon)
 

@@ -1,20 +1,51 @@
-%=========================================================================%
-% Main Script for Dynamic phantom study (Study II) using 
-% 1. Compressed Sensing 'CS' (ADMM Implementation)
-% 2. Robust Regression 'RR' (Nikolova (2004).
-% https://doi.org/10.1023/B:JMIV.0000011326.88682.e5)
-% 3. Sparse Outliers 'SO' (Dong (2012) .
-% https://www.researchgate.net/publication/256475955_Wavelet_Frame_Based_Blind_Image_Inpainting
-% 4.Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2023) 
-% All algorithms are based on ADMM/Split Bregman implementation
+%{
+Reference: 
+The algorithms implemented below corresponds to research
+currently submitted for MRM Journal publication and available as a 
+preprint on arXiv.
+
+Preprint Details:
+Title: "Motion-robust free-running cardiovascular MRI"
+arXiv: " arXiv:2308.02088v2 [eess.IV]" (Link: https:arxiv.org/abs/2308.02088v2)
+
+
+
+The preprint on arXiv provides an accessible overview of the research 
+and may be cited for more detailed information pertaining to the 
+algorithmic approach used herein.
+
+How to cite:
+Arshad SM, Potter LC, Chen C, Liu Y, Chandrasekaran P, Crabtree C, Han Y,
+Ahmad R (2023). Motion-robust free-running cardiovascular MRI. 
+arXiv preprint arXiv:2308.02088. 
+
 % ========================================================================%
-% OSU CMR Lab
-% The Ohio State University
-% Written by:
-% Syed Murtaza Arshad (arshad.32@osu.edu)
-% Rizwan Ahmad, PhD (ahmad.46@osu.edu)
-%=========================================================================% 
+CMR LAB (https://u.osu.edu/ahmad/)
+CMR LAB Github: https://github.com/orgs/OSU-MR
+
+The Ohio State University
+Written by:
+Syed Murtaza Arshad (arshad.32@osu.edu)
+(https://github.com/syedmurtazaarshad)
+
+Rizwan Ahmad, PhD (ahmad.46@osu.edu)
+%}
+
+%%
+%=========================================================================%
+%{
+About the code:
+Main Script for Dynamic phantom study (Study II): using 
+1. Compressed Sensing 'CS' (Lustig et al. 2008)
+2. Robust Regression 'RR' (Nikolova et al. 2004).
+3. Sparse Outliers 'SO' (Dong et al. 2012) .
+4.Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2023) 
+All algorithms are based on ADMM/Split Bregman implementation
+%}
+%=========================================================================%
+%% Workspace Initialization
 clear;
+% clc;
 close all;
 
 %% Load subfolders
@@ -59,7 +90,7 @@ p.sig   = 5e-4; % noise std
 p.out   = 0.00; % percentage of outliers
 p.oIter = 250;  % outer iterations
 p.iIter = 4;   % inner iterations
-p.gStp  = 1; % gradient step size
+p.gStp  = 0.5; % gradient step size
 p.acs   = 12; % size of the fully sampled ACS region
 p.R     = 2;  % accleration rate;
 p.sd    = 1; % seed for random number generation
@@ -67,8 +98,8 @@ p.vrb   = 50; % verbosite level; every vrb-th iteration spits out the objective 
 p.N = [param.nx,param.ny]; % image size
 
 %% for CS
-p.lam_cs = 1.2e-1*[1e-1, 1, 1, sqrt(2)];% regularization parameter for four wavelet bands
-p.mu_cs =   8.8e-1; % lagrange multiplier hyperparameter
+p.lam_cs = 2.*1.2e-1*[1e-1, 1, 1, sqrt(2)];% regularization parameter for four wavelet bands
+p.mu_cs =   2.*8.8e-1; % lagrange multiplier hyperparameter
 
 %% for RR
 p.lam_rr   = 6.3e-1*[1e-2, 1, 1, sqrt(2)];  % regularization parameter for four wavelet bands
@@ -76,15 +107,15 @@ p.mu1_rr   = 6e-2; % lagrange multiplier hyperparameter
 p.mu2_rr   = 9.1e-1;  % lagrange multiplier hyperparameter
 
 %% for SO
-p.lam1_so = 2.3e-2*[1e-2, 1, 1, sqrt(2)];% regularization parameter for four wavelet bands
+p.lam1_so = 2.*2.3e-2*[1e-2, 1, 1, sqrt(2)];% regularization parameter for four wavelet bands
 p.lam2_so = 2.7e-2; % lagrange multiplier hyperparameter
-p.mu_so =   8.5e-2; % lagrange multiplier hyperparameter
+p.mu_so =   2.*8.5e-2; % lagrange multiplier hyperparameter
 
 %% for CORe
 
-p.mu1_core  = 5e-1; % lagrange multiplier hyperparameter
+p.mu1_core  = 2.*5e-1; % lagrange multiplier hyperparameter
 p.mu2_core  = 5e-1; % lagrange multiplier hyperparameter
-p.lam1_core = 2.3e-2*[1e-2, 1, 1, sqrt(2)]; % regularization parameter for four wavelet bands
+p.lam1_core = 2.*2.3e-2*[1e-2, 1, 1, sqrt(2)]; % regularization parameter for four wavelet bands
 p.lam2_core = 2.1e-1; % lagrange multiplier hyperparameter
 
 %% NMSE & SSIM Array initializations
@@ -198,9 +229,17 @@ end
 %% Observed Siganl
 
 y0=kdata_ds(sampInd); %vectorized sampled data
-
-y=y0 + p.sig*max(abs(y0(:)))*(randn(size(y0)) + 1j*randn(size(y0))); %measured k-space data with added Gaussian noise
-
+y0=y0./max(abs(y0(:)));
+x=x./max(abs(y0(:)));
+y=y0 + p.sig*(randn(size(y0)) + 1j*randn(size(y0))); %measured k-space data with added Gaussian noise
+y = y/p.sig; % making noise variance 1
+x  = x/p.sig; %scaling image
+ymax = max(abs(y(:))); 
+yscl=75; % scaling factor, you can choose any scaling factor to get objective values in certain ranges
+y = yscl*y/ymax; %scaling measured data
+x = x/ymax; %scaling image
+ymax=max(abs(y(:)));
+xmax=max(abs(x(:)));
 %% Define NDDWT and it's adjoint
 p.W = harr_nddwt_2D({'db1','db1'},size(x),'pres_l2_norm','false');
 p.M = [p.N, 4]; 
@@ -209,20 +248,20 @@ p.M = [p.N, 4];
 disp('CS Reconstruction Started')
 %x_cs: reconstructed image
 x_cs=cs(y,p);
-nmse_cs_arr(k)=10*log10( norm(x(:)-x_cs(:))/norm(x(:)));
+nmse_cs_arr(k)=20*log10( norm(x(:)-x_cs(:))/norm(x(:)));
 ssim_cs_arr(k)=ssim(real(x_cs),real(x));
 %% RR 
 disp('RR Reconstruction Started')
 %x_rr: reconstructed image
 x_rr = rr(y,p);
-nmse_rr_arr(k)=10*log10( norm(x(:)-x_rr(:))/norm(x(:)) );
+nmse_rr_arr(k)=20*log10( norm(x(:)-x_rr(:))/norm(x(:)) );
 ssim_rr_arr(k)=ssim(real(x_rr),real(x));
 %% SO
 disp('SO Reconstruction Started')
 %x_so: reconstructed image
 %v_so: rejected outliers
 [x_so,v_so]=so(y,p);
-nmse_so_arr(k)=10*log10( norm(x(:)-x_so(:))/norm(x(:)) );
+nmse_so_arr(k)=20*log10( norm(x(:)-x_so(:))/norm(x(:)) );
 ssim_so_arr(k)=ssim(real(x_so),real(x));
 
 %% CORe
@@ -230,7 +269,7 @@ disp('CORe Reconstruction Started')
 %x_core: reconstructed image
 %v_core: rejected outliers
 [x_core,v_core]=core(y,p);
-nmse_core_arr(k)= 10*log10( norm(x(:)-x_core(:))/norm(x(:)) );
+nmse_core_arr(k)= 20*log10( norm(x(:)-x_core(:))/norm(x(:)) );
 ssim_core_arr(k)=ssim(real(x_core),real(x));
 
 

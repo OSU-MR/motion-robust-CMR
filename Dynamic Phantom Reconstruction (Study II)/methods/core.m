@@ -42,7 +42,7 @@ function [u,v] = core(y,p)
     for i = 1:oIter
       iStart = tic;  % Start iter timer
         for j = 1:iIter
-            gradA =  At(A(u) + v - y);  % Gradient of fidelity term in objective function wrt u
+            gradA =  2.*At(A(u) + v - y);  % Gradient of fidelity term in objective function wrt u
             gradW = mu1 * W.rec(W.dec(u,1) - d1 + b1); % Gradient of wavelet sparisty term in objective function wrt x
             u = u - gStp1*(gradA + gradW); % Taking gradient descent step to estimate true image
         end
@@ -64,15 +64,16 @@ function [u,v] = core(y,p)
        
         b2=b2(:);
         d2=d2(:);
-        v=v(:);
+
 % Displaying iteration information
         if rem(i, vrb)==0
-            objA = sum(sum(abs(A(u)-y+v).^2));
-            objW = sum(sum(sum(abs(W.dec(u,1) .* permute(lam1,[3,1,2])))));
-            objG = sum(lam2*sqrt(sum(abs(v).^2)));
+            objA = sum(abs(A(u)+v(:)-y).^2,'all');
+            objW = sum(abs(W.dec(u,1) .*permute(lam1,[3,1,2])),'all');
+            objG = sum(sum(abs(v).^2,1),2).*lam2;
             fprintf('Iter = %s \tobjTOT= %s \tobjA= %s \tobjW= %s \tobjG= %s \ttime/iter = %s\n',...
                     num2str(i), num2str(objA+objW+objG,5), num2str(objA,5), num2str(objW,5), num2str(objG,5), num2str(toc(iStart),2));
         end
+        v=v(:);
         
     end
     disp("Total CORe reconstruction time="+toc(tStart));

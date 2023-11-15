@@ -12,6 +12,7 @@ This repository contains the implementation of reconstruction algorithms discuss
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/457984bd-d556-4409-a0dc-e6d967d0fa4f" height="170"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/6873abb3-a6b2-4a3c-b824-a01b100d7404" height="170"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/b0a7ce42-0aac-4bd7-8f53-5bf85c7f6f01" height="170"/>
+  <br>
   <em>Conventional CS Reconstruction</em></span>
    <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/db49819d-3aa0-4614-ad37-46f904f9bf22" width="250" height="20"/>
   <em>Conventional CS Reconstruction</em></span>

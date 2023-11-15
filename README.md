@@ -1,6 +1,6 @@
 # Motion Robust CMR
 
-This repository contains the implementation of reconstruction algorithms discussed in the journal article, **["Motion-robust free-running cardiovascular MRI"](https://arxiv.org/abs/2308.02088)**, currently available on arXiv. The primary focus of this study is to enhance the robustness of Cardiovascular Magnetic Resonance (CMR) imaging against motion artifacts.
+This repository contains the implementation of reconstruction algorithms discussed in the journal article, **["Motion-robust free-running cardiovascular MRI"](https://arxiv.org/abs/2308.02088)**, currently available on [arXiv](https://arxiv.org/abs/2308.02088). The primary focus of this project is our innovative reconstruction algorithm, CORe (Compressive Recovery with Outlier Rejection), which is specifically designed to suppress motion artifacts.
 <p align="center">
   <h3 align="center">Exercise Stress Imaging</h3>
 </p>
@@ -15,17 +15,19 @@ This repository contains the implementation of reconstruction algorithms discuss
   <br>
   <em>Conventional CS Reconstruction</em></span>
    <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/db49819d-3aa0-4614-ad37-46f904f9bf22" width="200" height="20"/>
-  <em>Motion-robust Reconstruction</em></span>
+  <em>Proposed CORe Reconstruction</em></span>
 </div>
 
 ## About the Project
 
-The "Motion Robust CMR" project aims to address the challenges posed by motion artifacts during CMR imaging. Employing advanced reconstruction algorithms presented in our research work, this project demonstrates significant improvements in image quality and robustness in scenarios where motion artifacts are unavoidable. Our proposed algorithm, CORe (Compressive Recovery with Outlier Rejection), incorporates outlier rejection to suppress artifacts.
+The "Motion Robust CMR" study aims to address the challenges posed by motion artifacts during CMR imaging. Our proposed reconstruction algorithm, CORe incorporates outlier rejection to suppress motion artifacts. This work compares the performance of CORe against known reconstruction algorithms in different CMR techniques and scenarios, dicussed in our [research work](https://arxiv.org/abs/2308.02088). The results demonstrate significant improvements in image quality and robustness in scenarios where motion artifacts are unavoidable.
 
 ### Key Features
-
-- Implementation of known reconstruction algorithms for CMR, such as Compressed Sensing 'CS' (Lustig et al., 2008), Robust Regression 'RR' (Nikolova et al., 2004), and Sparse Outliers 'SO' (Dong et al., 2012).
-- Introduction of CORe (Compressive Recovery with Outlier Rejection), a novel method focusing on outlier rejection to improve motion robustness.
+- Introduction of CORe (Compressive Recovery with Outlier Rejection), a novel method equiped with outlier rejection to improve motion robustness.
+- Implementation of known CMR reconstruction algorithms for comparison, such as,
+  - Compressed Sensing 'CS' (Lustig et al., 2008)
+  - Robust Regression 'RR' (Nikolova et al., 2004)
+  - Sparse Outliers 'SO' (Dong et al., 2012).
 - Multiple studies on the comparison of algorithms:
    - Study I: Static phantom
    - Study II: Dynamic phantom

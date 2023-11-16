@@ -60,3 +60,8 @@ The datasets for Studies III, IV, and V consist of Cartesian undersampled acquis
 ### Cite as:
 
 Arshad SM, Potter LC, Chen C, Liu Y, Chandrasekaran P, Crabtree C, Han Y, Ahmad R (2023). Motion-robust free-running cardiovascular MRI. arXiv preprint [arXiv:2308.02088](https://arxiv.org/abs/2308.02088).
+
+## Authors 
+
+- **Syed Murtaza Arshad**, Primary Developer, [GitHub Profile](https://github.com/syedmurtazaarshad), arshad.32@osu.edu
+- **Rizwan Ahmad**, PI, [GitHub Profile](https://github.com/OSU-CMR), ahmad.46@osu.edu

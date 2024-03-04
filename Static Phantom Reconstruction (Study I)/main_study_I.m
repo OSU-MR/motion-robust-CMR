@@ -112,6 +112,24 @@ ssim_rr=zeros(n_real,1);
 ssim_so=zeros(n_real,1);
 ssim_core=zeros(n_real,1);
 
+%% Generate complex phantom
+%% Sampling Patten
+% GRO Parameters
+param_gro.PE   = 128;  % Size of of phase encoding (PE) grid
+param_gro.FR   = 1;   % Numbe of frames
+param_gro.n    = 58;   % Number of samples (readouts) per frame
+param_gro.M    = param_gro.FR*param_gro.n; % Total number of samples
+param_gro.E    = 1;    % Number of encoding, E=1 for cine, E=2 for flow (phase-contrast MRI)
+param_gro.tau  = 1;    % Extent of shift between frames, tau = 1 or 2: golden ratio shift, tau>2: tiny golden ratio shift
+param_gro.s    = 2.2;  % s>=1. larger values means higher sampling density in the middle (default: 2.2)
+param_gro.alph = 3;    % alph>1. larger alpha means sharper transition from high-density to low-density regions (default: 3)
+param_gro.PF   = 0;    % for partial fourier; discards PF samples from one side (default: 0)
+param_gro.dsp  = 0;    % Display figures: 0 no, 1 yes
+
+ [PEInd, sampling] = gro_fun(param_gro);   
+p.s=repmat(sampling',128,1); % Repeating Sampling pattern along readout dimension and storing in parameters structure 'p'
+
+
 
 %% Generate complex phantom
 xo = phantom('modified shepp-logan', p.N(1));
@@ -130,11 +148,6 @@ fo  = fo_arr(iter)/100; % fraction of outlier readouts
 sig1 = 1e-3; % std of Gaussian noise
 sig2 = sig2_arr(iter)*sig1; % std of outlier noise
 
-
-%% Sampling pattern
-p.s = zeros(size(xo)); % initializing sampling pattern
-p.s(:,randsample(p.N(2),round(p.N(2)/R))) = 1; % downsampling the data according to acceleration
-p.s(:,end/2+1-acs/2:end/2+1+acs/2) = 1; % setting acs region to 1
 
 %% Define operators
 p.A  = @(xo) funA (xo, p.s); % Defining forward operator
@@ -175,29 +188,25 @@ disp('======CS Recon Started======')
 x_cs = cs(yn,p); % cs recon method
 nmse_cs(iter)=20*log10( norm(x(:)-x_cs(:))/norm(x(:))); % calculating nmse
 ssim_cs(iter)=ssim(real(x_cs),real(x)); % calculating ssim
-disp(nmse_cs);
-disp(ssim_cs);
+
 %% rr
 disp('======RR Recon Started======')
 x_rr = rr(yn,p); % rr recon method
 nmse_rr(iter)=20*log10( norm(x(:)-x_rr(:))/norm(x(:)) ); % calculating nmse
 ssim_rr(iter)=ssim(real(x_rr),real(x)); % calculating ssim
-disp(nmse_rr);
-disp(ssim_rr);
+
 %% so
 disp('======SO Recon Started======')
 [x_so, yv] = so(yn,p); % so recon method
 nmse_so(iter)=20*log10( norm(x(:)-x_so(:))/norm(x(:)) ); % calculating nmse
 ssim_so(iter)=ssim(real(x_so),real(x)); % calculating ssim
-disp(nmse_so);
-disp(ssim_so);
+
 %% core
 disp('======CORe Recon Started======')
 [x_core, yg] = core(yn,p); % core recon method
 nmse_core(iter)= 20*log10( norm(x(:)-x_core(:))/norm(x(:)) ); % calculating nmse
 ssim_core(iter)=ssim(real(x_core),real(x)); % calculating ssim
-disp(nmse_core);
-disp(ssim_core);
+
 end
 
 %% Average Values

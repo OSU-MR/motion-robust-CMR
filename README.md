@@ -2,10 +2,11 @@
 
 This repository contains the implementation of reconstruction algorithms discussed in the journal article, **["Motion-robust free-running cardiovascular MRI"](https://arxiv.org/abs/2308.02088)**, currently available on [arXiv](https://arxiv.org/abs/2308.02088). The primary focus of this project is our innovative reconstruction algorithm, CORe (Compressive Recovery with Outlier Rejection), which is specifically designed to suppress motion artifacts.
 <p align="center">
-  <h3 align="center">Exercise Stress Imaging</h3>
+  <h3 align="center">4D flow Imaging</h3>
 </p>
 <p align="center">
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/c0009d80-6d4c-43f2-80dc-aa39fc82621a" height="150"/>
+  <span style="position: absolute; top: 20px; left: 40px; color: red; font-size: 24px;">&rarr;</span>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/78bec8c9-1d59-4a5e-bd16-3d7cbd1e2542" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/0394e661-6f01-47c2-8222-f3c49ec85f07" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/058f9fdd-e747-48de-9174-28e3900d5b79"height="150"/>

@@ -1,6 +1,6 @@
-# Motion Robust CMR
+# Motion Robust CMR (Rest-Exercise 3D cine & 4D flow)
 
-This repository contains the implementation of reconstruction algorithms discussed in the journal article, **["Motion-robust free-running cardiovascular MRI"](https://arxiv.org/abs/2308.02088)**, currently available on [arXiv](https://arxiv.org/abs/2308.02088). The primary focus of this project is our innovative reconstruction algorithm, CORe (Compressive Recovery with Outlier Rejection), which is specifically designed to suppress motion artifacts.
+This repository contains the implementation of volumetric CMR reconstruction algorithms discussed in the research article, **["Motion-robust free-running volumetric cardiovascular MRI"](http://doi.org/10.1002/mrm.30123 )**, published in Magnetic Resonance in Medicine (MRM) journal. The primary focus of this project is our innovative reconstruction algorithm, CORe (Compressive Recovery with Outlier Rejection), which is specifically designed to suppress motion artifacts.
 <p align="center">
   <h3 align="center">4D flow Imaging</h3>
 </p>
@@ -26,7 +26,7 @@ This repository contains the implementation of reconstruction algorithms discuss
 
 ## About the Project
 
-The "Motion Robust CMR" study aims to address the challenges posed by motion artifacts during CMR imaging. Our proposed reconstruction algorithm, CORe incorporates outlier rejection to suppress motion artifacts. This work compares the performance of CORe against known reconstruction algorithms in different CMR techniques and scenarios, dicussed in our [research work](https://arxiv.org/abs/2308.02088). The results demonstrate significant improvements in image quality and robustness in scenarios where motion artifacts are unavoidable.
+The "Motion Robust CMR" study aims to address the challenges posed by motion artifacts during 3D cine and 4D flow imaging at rest and during exercise. Our proposed reconstruction algorithm, CORe incorporates outlier rejection to suppress motion artifacts. This work compares the performance of CORe against known reconstruction algorithms in different volumetric CMR techniques and scenarios, dicussed in our [research work](http://doi.org/10.1002/mrm.30123 ). The results demonstrate significant improvements in image quality and robustness in scenarios where motion artifacts are unavoidable.
 
 ### Key Features
 - Introduction of CORe (Compressive Recovery with Outlier Rejection), a novel method equiped with outlier rejection to improve motion robustness.
@@ -60,7 +60,7 @@ The datasets for Studies III, IV, and V consist of Cartesian undersampled acquis
 
 ### Cite as:
 
-Arshad SM, Potter LC, Chen C, Liu Y, Chandrasekaran P, Crabtree C, Han Y, Ahmad R (2023). Motion-robust free-running cardiovascular MRI. arXiv preprint [arXiv:2308.02088](https://arxiv.org/abs/2308.02088).
+Arshad SM, Potter LC, Chen C, et al. Motion-robust free-running volumetric cardiovascular MRI. Magn Reson Med. 2024; 1-15. doi: [10.1002/mrm.30123](http://doi.org/10.1002/mrm.30123).
 
 ## Authors 
 

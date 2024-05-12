@@ -5,7 +5,7 @@ This repository contains the implementation of reconstruction algorithms discuss
   <h3 align="center">4D flow Imaging</h3>
 </p>
 <p align="center">
-  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/c0009d80-6d4c-43f2-80dc-aa39fc82621a" height="150"/>
+  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/c0009d80-6d4c-43f2-80dc-aa39fc82621a" height="150">
   <span style="position: absolute; top: 20px; left: 40px; color: red; font-size: 24px;">&rarr;</span>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/78bec8c9-1d59-4a5e-bd16-3d7cbd1e2542" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/0394e661-6f01-47c2-8222-f3c49ec85f07" height="150"/>

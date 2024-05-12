@@ -1,4 +1,5 @@
-# Motion Robust Volumetric CMR (Rest-Exercise 3D cine & 4D flow MRI)
+# Motion Robust Volumetric CMR 
+#(Rest-Exercise 3D cine & 4D flow MRI)
 
 This repository contains the implementation of volumetric CMR reconstruction algorithms discussed in the research article, **["Motion-robust free-running volumetric cardiovascular MRI"(doi.org/10.1002/mrm.30123)](http://doi.org/10.1002/mrm.30123 )**, published in Magnetic Resonance in Medicine (MRM) journal. The primary focus of this project is our innovative reconstruction algorithm, CORe (Compressive Recovery with Outlier Rejection), which is specifically designed to suppress motion artifacts.
 <p align="center">

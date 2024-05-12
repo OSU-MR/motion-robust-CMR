@@ -5,10 +5,10 @@ This repository contains the implementation of reconstruction algorithms discuss
   <h3 align="center">Exercise Stress Imaging</h3>
 </p>
 <p align="center">
-  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/5ca0ff76-b84a-433f-ab53-3df9becaaf6e" height="150"/>
-  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/1d14c2dc-047f-4a81-96e1-8940af78a3a0" height="150"/>
-  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/fe8ad0c8-60b3-4d99-bbe3-794dab6009a7" height="150"/>
-  <!-- <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/bffd8697-082f-41a7-810b-2556f7321d41"height="100"/>-->
+  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/c0009d80-6d4c-43f2-80dc-aa39fc82621a" height="150"/>
+  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/78bec8c9-1d59-4a5e-bd16-3d7cbd1e2542" height="150"/>
+  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/0394e661-6f01-47c2-8222-f3c49ec85f07" height="150"/>
+  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/058f9fdd-e747-48de-9174-28e3900d5b79"height="150"/>
   <br>
   <em>Conventional CS Reconstruction</em>
   <br>

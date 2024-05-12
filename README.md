@@ -5,10 +5,7 @@ This repository contains the implementation of reconstruction algorithms discuss
   <h3 align="center">4D flow Imaging</h3>
 </p>
 <p align="center">
-  <div style="position: relative; display: inline-block;">
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/c0009d80-6d4c-43f2-80dc-aa39fc82621a" height="150"/>
-  <span style="position: absolute; top: 20px; left: 40px; color: red; font-size: 24px;">&rarr;</span>
-  </div>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/78bec8c9-1d59-4a5e-bd16-3d7cbd1e2542" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/0394e661-6f01-47c2-8222-f3c49ec85f07" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/058f9fdd-e747-48de-9174-28e3900d5b79"height="150"/>
@@ -16,9 +13,10 @@ This repository contains the implementation of reconstruction algorithms discuss
   <em>Conventional CS Reconstruction</em>
   <br>
   <br>
-  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/457984bd-d556-4409-a0dc-e6d967d0fa4f" height="150"/>
-  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/6873abb3-a6b2-4a3c-b824-a01b100d7404" height="150"/>
-  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/b0a7ce42-0aac-4bd7-8f53-5bf85c7f6f01" height="150"/>
+  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/867e745a-e4aa-4546-a5cb-4a002c1c2fec" height="150"/>
+  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/819588f0-7029-4748-a93c-627f141a906d" height="150"/>
+  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/819588f0-7029-4748-a93c-627f141a906d" height="150"/>
+  <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/d73e0771-c8bb-4e55-856d-11658edfc4f3" height="150"/>
   <br>
   <em>Proposed CORe Reconstruction</em>
 <!--  <em>Conventional CS Reconstruction</em></span>-->

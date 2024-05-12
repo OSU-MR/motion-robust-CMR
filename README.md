@@ -6,20 +6,21 @@ This repository contains the implementation of volumetric CMR reconstruction alg
   <h3 align="center">4D flow Imaging</h3>
 </p>
 <p align="center">
-  <em>Conventional CS Reconstruction</em>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/c0009d80-6d4c-43f2-80dc-aa39fc82621a" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/78bec8c9-1d59-4a5e-bd16-3d7cbd1e2542" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/0394e661-6f01-47c2-8222-f3c49ec85f07" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/058f9fdd-e747-48de-9174-28e3900d5b79"height="150"/>
   <br>
+  <em>Conventional CS Reconstruction</em>
   <br>
   <br>
-  <em>Proposed CORe Reconstruction</em>
+  <br>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/867e745a-e4aa-4546-a5cb-4a002c1c2fec" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/819588f0-7029-4748-a93c-627f141a906d" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/819588f0-7029-4748-a93c-627f141a906d" height="150"/>
   <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/d73e0771-c8bb-4e55-856d-11658edfc4f3" height="150"/>
   <br>
+  <em>Proposed CORe Reconstruction</em>
 <!--  <em>Conventional CS Reconstruction</em></span>-->
   <!-- <img src="https://github.com/OSU-MR/motion-robust-CMR/assets/97550963/db49819d-3aa0-4614-ad37-46f904f9bf22" width="200" height="20"/>-->
  <!-- <em>Proposed CORe Reconstruction</em></span>-->

@@ -54,9 +54,9 @@ Requires MATLAB 2019 or later.
 
 ### Usage
 - Study I and II utilize simulated phantom data, which is generated directly within the main MATLAB script.
-- Studies III, IV, and V employ in-vivo CMR datasets, available at [Cardiovascular MRI (CMR) 3D Cine, 4D Flow, and Exercise Stress 4D Flow Datasets](https://zenodo.org/records/8105485).
+- Studies III, IV, and V employ in-vivo CMR datasets, available at [Cardiovascular MRI (CMR) 3D Cine, 4D Flow, and Exercise Stress 4D Flow Datasets](https://zenodo.org/records/12515230).
 
-### [Datasets](https://zenodo.org/records/8105485)
+### [Datasets](https://zenodo.org/records/12515230)
 The datasets for Studies III, IV, and V consist of Cartesian undersampled acquisitions with self-gating. The provided .mat files contain self-gated expiratory phase k-space data, sorted into 20 cardiac phases.
 
 

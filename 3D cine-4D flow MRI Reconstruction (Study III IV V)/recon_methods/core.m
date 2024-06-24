@@ -10,29 +10,31 @@ function [u,hist] = core(x0,y,A,p)
 % hist: history of objective function
 %===========================================================================================%
 % Compressive Recovery with Outlier Rejection 'CORe' (ADMM/Split Bregman Implementation)
+% Published in "Motion-robust free-running volumetric cardiovascular MRI" 
+% https://doi.org/10.1002/mrm.30123
 % Written by:
 % Syed Murtaza Arshad (arshad.32@osu.edu)
 % Rizwan Ahmad, PhD (ahmad.46@osu.edu)
 %===========================================================================================%
 % Extract parameters from p structure
-mu1  = p.mu1_l2l1g;
-mu2  = p.mu2_l2l1g;
-lam1   = p.lam1_l2l1g;
-lam2    =p.lam2_l2l1g;
-oIter = p.oIter;
-iIter = p.iIter;
-gStp  = p.gStp;
-vrb   = p.vrb;
+mu1     = p.mu1_l2l1g;
+mu2     = p.mu2_l2l1g;
+lam1    = p.lam1_l2l1g;
+lam2    = p.lam2_l2l1g;
+oIter   = p.oIter;
+iIter   = p.iIter;
+gStp    = p.gStp;
+vrb     = p.vrb;
 readout = p.readout;
 
 % Casting the data to single precision to reduce the data on GPU
-y=single(y);
+y = single(y);
 u = single(x0); % u represents the current estimated image
 clear x0; % intial image not needed anymore
 
 % Initializing outliers 'v', and auxiliary variables d and b as 0s
 if p.use_gpu
-v=zeros(size(y),"single","gpuArray");
+v  = zeros(size(y),"single","gpuArray");
 d1 = zeros(A.frame_size(1),A.frame_size(2),A.frame_size(3),A.Q,16, ...
     "single","gpuArray");
 else

@@ -1,26 +1,27 @@
 %{
+Github Repository: https://github.com/OSU-MR/motion-robust-CMR
+
 Reference: 
 The algorithms implemented below corresponds to research
-currently submitted for MRM Journal publication and available as a 
-preprint on arXiv.
+article published in Magnetic Resonance in Medicine (MRM) journal 
+(https://doi.org/10.1002/mrm.30123).
 
-Preprint Details:
-Title: "Motion-robust free-running cardiovascular MRI"
-arXiv: " arXiv:2308.02088v2 [eess.IV]" (Link: https:arxiv.org/abs/2308.02088v2)
+Publication Details:
+Title: "Motion-robust free-running volumetric cardiovascular MRI"
+Authors: Syed M. Arshad,  Lee C. Potter,  Chong Chen,  Yingmin Liu,  Preethi Chandrasekaran, 
+Christopher Crabtree,  Matthew S. Tong,  Orlando P. Simonetti,  Yuchi Han,  Rizwan Ahmad
 
-The preprint on arXiv provides an accessible overview of the research 
+The article provides an accessible overview of the research 
 and may be cited for more detailed information pertaining to the 
 algorithmic approach used herein.
 
 How to cite:
-Arshad SM, Potter LC, Chen C, Liu Y, Chandrasekaran P, Crabtree C, Han Y,
-Ahmad R (2023). Motion-robust free-running cardiovascular MRI. 
-arXiv preprint arXiv:2308.02088. 
+Arshad SM, Potter LC, Chen C, et al. Motion-robust free-running volumetric cardiovascular MRI. 
+Magn Reson Med. 2024; 1-15. doi: 10.1002/mrm.30123
 
 % ========================================================================%
-CMR LAB (https://u.osu.edu/ahmad/)
-CMR LAB Github: https://github.com/orgs/OSU-MR
 
+CMR LAB (https://u.osu.edu/ahmad/)
 The Ohio State University
 Written by:
 Syed Murtaza Arshad (arshad.32@osu.edu)
@@ -34,7 +35,7 @@ Rizwan Ahmad, PhD (ahmad.46@osu.edu)
 %{
 About the code: 
 Main Script for 3D Cine & 4D Flow Reconstruction using 
-1.Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2023) 
+1. Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2024) 
 2. Compressed Sensing 'CS' (Lustig et al. 2008)
  Both algorithms are based on ADMM/Split Bregman implementation
 %=========================================================================%
@@ -58,16 +59,19 @@ saveName=input(prompt,'s');
 
 prompt='Is the data 4D flow (1) or 3D cine (0)?\n';
 flow=input(prompt);
+
+prompt='Is the data Rest (1) or Exercise (0)?\n';
+rest=input(prompt);
+
 opt.flow=flow;
 % Add your own path where the data is
-[fname, pathname] = uigetfile('/home/', ...
+[fname, pathname] = uigetfile('./', ...
     'Select data file');   % data file (.mat)
 
 
 %*************************************************
 % add folder path to save results
-% paths are formatted for linux, you can change for windows accordingly
-sfolder = ['/home/',saveName,'_',datestr8601,'/'];               
+sfolder = ['./',saveName,'_',datestr8601,'/'];               
 
 %*************************************************
 %===================================================================================================
@@ -83,8 +87,50 @@ sfolder = ['/home/',saveName,'_',datestr8601,'/'];
 %   sampB,X,Y,Z: sampling pattern (optional) - [S1 X S2 X S3 X Time/Phases]
 %   weightsB,X,Y,Z: data weights (optional) - [S1 X S2 X S3 X Time/Phases]
 %       - If you don't need weights, set to sampling pattern
-%% Options & hyper parameters
-%*************************************************
+
+%% Regularization Parameters 
+% 16 regularization params for 16 wavelet bands (CS)
+% lambda= c.* [Wav. band 1, Wav. band 2, ....., Wav. band 16]
+% First try adjusting scalar 'c' for optimizing regularization
+% Then if necessary try changing the ratios of wavelet bands
+
+if(flow) % For 4D Flow
+    if(rest)  % For rest datasets
+        %For CS
+        opt.lam_cs = 2e-4*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
+        %For CORe
+        opt.lam1_core = 2e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5];  
+        opt.lam2_core = 7.5e-2; 
+    else  % For exercise datasets (using 2x stronger regularization)
+        %For CS
+        opt.lam_cs = 4e-4*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
+        %For CORe
+        opt.lam1_core = 4e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5];  
+        opt.lam2_core = 7.5e-2;
+    end
+
+else % For 3D Cine
+    if(rest)  % For rest datasets
+        %For CS
+        opt.lam_cs = 5e-4*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
+        %For CORe
+        opt.lam1_core = 5e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5];  
+        opt.lam2_core = 7.5e-2; 
+    else  % For exercise datasets
+        %For CS
+        opt.lam_cs = 7e-4*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
+        %For CORe
+        opt.lam1_core = 7e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5];  
+        opt.lam2_core = 7.5e-2;
+    end
+end
+
+
+opt.mu_cs =   5e-1; %Lagrange multiplier
+opt.mu1_core =   5e-1; %Lagrange multiplier
+opt.mu2_core =   5e-1; %Lagrange multiplier
+
+%% Options % parameters
 %formatting of numbers
 formatSpec = '%.3g';
 opt.coil = 12;          % Number of reduced coils
@@ -99,27 +145,7 @@ opt.iIter = 4;      % inner iterations
 opt.gStp  = 1e-1;   % gradient step size
 opt.vrb   = 5;      %p rint iterations details after every 'vrb' iterations 
 
-% Parameters for CS
-% 16 regularization params for 16 wavelet bands (CS)
-if(flow) % For 4D Flow
-    opt.lam_cs = 14e-4*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
-else % For 3D Cine
-    opt.lam_cs = 2e-3*[1e-2, 1 1,1,1,1,1,1,5,5,5,5,5,5,5,5]; 
-end
-opt.mu_cs =   10e-1; %langrange multiplier
 
-
-% Parameters for CORe
-if(flow) % For 4D Flow
-    % 16 regularization params for 16 wavelet bands (CORe)
-    opt.lam1_core = 8.5e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5]; % 
-    opt.lam2_core = 1.5e-1; %lagrange multiplier
-else % For 3D Cine
-   opt.lam1_core = 6.4e-4*[1e-2,1 1,1,1,1,1,1, 5,5,5,5,5,5,5,5]; % 
-   opt.lam2_core = 7.5e-2; %lagrange multiplier
-end
-opt.mu1_core =   10e-1; %lagrange multiplier
-opt.mu2_core =   5e-1; %lagrange multiplier
 
 
 %% Import motion resolved (binned/sorted data arrays)
@@ -187,7 +213,8 @@ avg_image = ifft3_shift(avg_k);
 % estimate walsh sensitivity maps
 disp('estimating sensitivity maps.....')
 p.fil = 3; % filter size
-[maps,~] = WalshCoilCombine3D(avg_image,p); %sensitivity maps
+[maps,x0] = WalshCoilCombine3D(avg_image,p); %sensitivity maps & initial image x0
+x0 = repmat(x0,[1,1,1,size(samp,4)]); %repeating static initial image over frames
 %********************************************
 %% Reconstruction via selected recon method
 %---------------------------------------------------------------------------------------------------
@@ -204,7 +231,7 @@ scale = 0.1 * max(abs(kdata(:)));
 opt_scale = opt; 
 
 for f=1:numel(recon)
-
+t = tic; % Starting reconstruction timer
 fprintf("\nRecon: "+recon(f)+"\n");
 opt_scale.recon = recon(f);    % reconstruction method   
 % xhat is the reconstructed image
@@ -218,8 +245,9 @@ sname = [saveName,'_',datestr8601,'_',...
             gpuDevice(1);
         end
         [xhat(:,:,:,:,k),hist] = pMRIL14D(kdata(:,:,:,:,:,k)/scale, ...
-        samp(:,:,:,:,k), weights(:,:,:,:,k), opt_scale, maps);
+        samp(:,:,:,:,k), weights(:,:,:,:,k), opt_scale, maps,x0/scale);
     end
+fprintf('Elapsed Time = %0.2f minutes\n',toc(t)/60);
 
 %% Magnitude Image Recovery
 % Saving magnitude image in outputs struct

@@ -2,6 +2,8 @@
 function [x,v] = core(y,p)
 %===========================================================================================%
 % Compressive Recovery with Outlier Rejection - 'CORe' (ADMM/Split Bregman Implementation)
+% Published in "Motion-robust free-running volumetric cardiovascular MRI" 
+% https://doi.org/10.1002/mrm.30123
 % Written by:
 % Syed Murtaza Arshad (arshad.32@osu.edu)
 % Rizwan Ahmad, PhD (ahmad.46@osu.edu)

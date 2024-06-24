@@ -1,21 +1,23 @@
 %{
+Github Repository: https://github.com/OSU-MR/motion-robust-CMR
+
 Reference: 
 The algorithms implemented below corresponds to research
-currently submitted for MRM Journal publication and available as a 
-preprint on arXiv.
+article published in Magnetic Resonance in Medicine (MRM) journal 
+(https://doi.org/10.1002/mrm.30123).
 
-Preprint Details:
-Title: "Motion-robust free-running cardiovascular MRI"
-arXiv: " arXiv:2308.02088v2 [eess.IV]" (Link: https:arxiv.org/abs/2308.02088v2)
+Publication Details:
+Title: "Motion-robust free-running volumetric cardiovascular MRI"
+Authors: Syed M. Arshad,  Lee C. Potter,  Chong Chen,  Yingmin Liu,  Preethi Chandrasekaran, 
+Christopher Crabtree,  Matthew S. Tong,  Orlando P. Simonetti,  Yuchi Han,  Rizwan Ahmad
 
-The preprint on arXiv provides an accessible overview of the research 
+The article provides an accessible overview of the research 
 and may be cited for more detailed information pertaining to the 
 algorithmic approach used herein.
 
 How to cite:
-Arshad SM, Potter LC, Chen C, Liu Y, Chandrasekaran P, Crabtree C, Han Y,
-Ahmad R (2023). Motion-robust free-running cardiovascular MRI. 
-arXiv preprint arXiv:2308.02088. 
+Arshad SM, Potter LC, Chen C, et al. Motion-robust free-running volumetric cardiovascular MRI. 
+Magn Reson Med. 2024; 1-15. doi: 10.1002/mrm.30123
 
 % ========================================================================%
 CMR LAB (https://u.osu.edu/ahmad/)
@@ -38,7 +40,7 @@ Main Script for Static phantom study (Study I): Reconstruction of undersampled n
 1. Compressed Sensing 'CS' (Lustig et al. 2008)
 2. Robust Regression 'RR' (Nikolova et al. 2004).
 3. Sparse Outliers 'SO' (Dong et al. 2012) .
-4.Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2023) 
+4.Compressive recovery with Outlier Rejection 'CORe' (Arshad et al. 2024) 
 All algorithms are based on ADMM/Split Bregman implementation
 %}
 %=========================================================================%

@@ -62,7 +62,7 @@ The datasets for Studies III, IV, and V consist of Cartesian undersampled acquis
 
 ### Cite as:
 
-Arshad SM, Potter LC, Chen C, et al. Motion-robust free-running volumetric cardiovascular MRI. Magn Reson Med. 2024; 1-15. doi: [10.1002/mrm.30123](http://doi.org/10.1002/mrm.30123).
+Arshad SM, Potter LC, Chen C, et al. Motion-robust free-running volumetric cardiovascular MRI. Magn Reson Med. 2024; 92(3): 1248-1262. doi: [10.1002/mrm.30123](http://doi.org/10.1002/mrm.30123).
 
 ## Authors 
 
